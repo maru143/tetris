@@ -7,6 +7,10 @@ verify_ssl = true
 
 [packages]
 pyqt5 = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.8"
+
+[scripts]
+test = "coverage run -m unittest discover test"
