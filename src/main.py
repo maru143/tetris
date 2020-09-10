@@ -62,6 +62,9 @@ class ExampleWidget(QMainWindow):
         elif event.key() == Qt.Key_Z:
             # TODO: 左回転
             print("Z")
+        elif event.key() == Qt.Key_Shift:
+            # TODO: HOLD
+            print("SHIFT")
         elif event.key() == Qt.Key_P:
             # TODO: ポーズする
             print("P")
