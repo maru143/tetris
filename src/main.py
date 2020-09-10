@@ -5,6 +5,7 @@ import sys
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow
 
+
 class ExampleWidget(QMainWindow):
 
     def __init__(self):
@@ -74,8 +75,8 @@ class ExampleWidget(QMainWindow):
         else:
             pass
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     app = QApplication(sys.argv)
     gui = ExampleWidget()
     sys.exit(app.exec_())
