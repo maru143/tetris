@@ -3,15 +3,16 @@
 
 import sys
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow
 
-class ExampleWidget(QWidget):
+class ExampleWidget(QMainWindow):
 
     def __init__(self):
 
         super().__init__()
 
         self.init_window()
+        self.init_buttons()
 
         # window を表示
         self.show()
@@ -21,6 +22,21 @@ class ExampleWidget(QWidget):
 
         self.resize(300, 300)
         self.setWindowTitle('TETRIS')
+
+    def init_buttons(self):
+        button_start = QPushButton("Start", self)
+        button_start.move(50, 250)
+        button_start.clicked.connect(self.start_game)
+
+        button_end = QPushButton("End", self)
+        button_end.move(150, 250)
+        button_end.clicked.connect(self.exit_game)
+
+    def start_game(self):
+        self.statusBar().showMessage("Game Start")
+
+    def exit_game(self):
+        self.statusBar().showMessage("Goodbye")
 
     def keyPressEvent(self, event):
         "event handlerの設定 (この名前の関数をオーバーロードすると設定できる)"
