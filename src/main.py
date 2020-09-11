@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
+
+from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow
 
@@ -14,17 +16,15 @@ class ExampleWidget(QMainWindow):
 
         self.init_window()
         self.init_buttons()
-
-        # window を表示
         self.show()
 
-    def init_window(self):
-        "window の初期設定"
+    def init_window(self) -> None:
+        """window の初期設定"""
 
         self.resize(300, 300)
         self.setWindowTitle('TETRIS')
 
-    def init_buttons(self):
+    def init_buttons(self) -> None:
         button_start = QPushButton("Start", self)
         button_start.move(50, 250)
         button_start.clicked.connect(self.start_game)
@@ -33,14 +33,19 @@ class ExampleWidget(QMainWindow):
         button_end.move(150, 250)
         button_end.clicked.connect(self.exit_game)
 
-    def start_game(self):
+    def start_game(self) -> None:
         self.statusBar().showMessage("Game Start")
 
-    def exit_game(self):
+    def exit_game(self) -> None:
         self.statusBar().showMessage("Goodbye")
+        self.close()
 
-    def keyPressEvent(self, event):
-        "event handlerの設定 (この名前の関数をオーバーロードすると設定できる)"
+    def paintEvent(self, event: QtGui.QPaintEvent) -> None:
+        """フィールドの表示処理"""
+        pass
+
+    def keyPressEvent(self, event: QtGui.QKeyEvent) -> None:
+        """event handlerの設定 (この名前の関数をオーバーロードすると設定できる)"""
 
         if event.key() == Qt.Key_Right:
             # TODO: 現在のブロックを右に動かす
