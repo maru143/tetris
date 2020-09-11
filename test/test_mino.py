@@ -25,6 +25,46 @@ class TestTetroMino(unittest.TestCase):
         desired_shape = np.array(shape, dtype=bool)
         self.assertTrue(np.allclose(mino.get_shape(), desired_shape))
 
+        mino = TetroMino.T
+        shape = \
+            [[0, 1, 0],
+             [1, 1, 1],
+             [0, 0, 0]]
+        desired_shape = np.array(shape, dtype=bool)
+        self.assertTrue(np.allclose(mino.get_shape(), desired_shape))
+
+        mino = TetroMino.L
+        shape = \
+            [[0, 0, 1],
+             [1, 1, 1],
+             [0, 0, 0]]
+        desired_shape = np.array(shape, dtype=bool)
+        self.assertTrue(np.allclose(mino.get_shape(), desired_shape))
+
+        mino = TetroMino.J
+        shape = \
+            [[1, 0, 0],
+             [1, 1, 1],
+             [0, 0, 0]]
+        desired_shape = np.array(shape, dtype=bool)
+        self.assertTrue(np.allclose(mino.get_shape(), desired_shape))
+
+        mino = TetroMino.Z
+        shape = \
+            [[0, 1, 1],
+             [1, 1, 0],
+             [0, 0, 0]]
+        desired_shape = np.array(shape, dtype=bool)
+        self.assertTrue(np.allclose(mino.get_shape(), desired_shape))
+
+        mino = TetroMino.S
+        shape = \
+            [[1, 1, 0],
+             [0, 1, 1],
+             [0, 0, 0]]
+        desired_shape = np.array(shape, dtype=bool)
+        self.assertTrue(np.allclose(mino.get_shape(), desired_shape))
+
 
 class TestTetroMinoColor(unittest.TestCase):
     def test_color(self):
