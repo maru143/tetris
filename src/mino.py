@@ -219,9 +219,12 @@ class DroppingMino:
     direction: Direction
 
     def __init__(self, mino: TetroMino):
-        self.position = (0, 4)
         self.mino = mino
         self.direction = Direction.NORTH
+        if mino == TetroMino.O:  # O minoだけは真ん中から出すよう調節
+            self.position = (0, 4)
+        else:
+            self.position = (0, 3)
 
     def rend_mino(self) -> np.ndarray:
         """現在のdirectionに合わせたminoの形を返す"""
@@ -236,12 +239,17 @@ class DroppingMino:
 
         size = self.mino.size()
         y, x = self.position
-        if y < 0 or y + size > field.height or x < 0 or x + size > field.width:
-            return False
         shape = self.rend_mino()
         for i in range(size):
             for j in range(size):
-                if shape[i][j] and field.grid[y + i][x + j].filled:
+                if not shape[i][j]:
+                    continue
+                block_y = y + i
+                block_x = x + j
+                if block_y < 0 or block_y >= field.height or \
+                        block_x < 0 or block_x >= field.width:
+                    return False
+                if field.grid[block_y][block_x].filled:
                     return False
         return True
 

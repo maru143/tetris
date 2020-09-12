@@ -108,6 +108,43 @@ class TestDroppingMino(unittest.TestCase):
         dropping_mino.position = (15, 3)  # 左上が重なる
         self.assertFalse(dropping_mino.valid_place(field))
 
+        dropping_mino.position = (10, 4)  # 安全地帯に戻る
+        dropping_mino.spin_anticlockwise(field)
+        dropping_mino.position = (10, 8)  # 回転した状態で右端ギリギリ
+        self.assertTrue(dropping_mino.valid_place(field))
+        dropping_mino.position = (10, 4)  # 安全地帯に戻る
+        dropping_mino.spin_anticlockwise(field)
+        dropping_mino.spin_anticlockwise(field)
+        dropping_mino.position = (10, -1)  # 回転した状態で左端ギリギリ
+        self.assertTrue(dropping_mino.valid_place(field))
+
+        dropping_mino = DroppingMino(TetroMino.I)
+        dropping_mino.position = (3, 0)  # 真横状態で左端ギリギリ
+        self.assertTrue(dropping_mino.valid_place(field))
+        dropping_mino.position = (3, -1)  # 真横状態で左端ギリギリout
+        self.assertFalse(dropping_mino.valid_place(field))
+        dropping_mino.spin_clockwise(field)
+        dropping_mino.position = (3, -2)  # I minoが縦に左端ギリギリ
+        self.assertTrue(dropping_mino.valid_place(field))
+        dropping_mino.position = (3, -3)  # I minoが縦に左端ギリギリout
+        self.assertFalse(dropping_mino.valid_place(field))
+        dropping_mino.position = (3, 7)  # I minoが縦に右端ギリギリ
+        self.assertTrue(dropping_mino.valid_place(field))
+        dropping_mino.position = (3, 8)  # I minoが縦に右端ギリギリout
+        self.assertFalse(dropping_mino.valid_place(field))
+
+        dropping_mino.position = (3, 5)  # 安全地帯に戻る
+        dropping_mino.spin_clockwise(field)
+        dropping_mino.spin_clockwise(field)
+        dropping_mino.position = (3, -1)  # I minoが縦に左端ギリギリ
+        self.assertTrue(dropping_mino.valid_place(field))
+        dropping_mino.position = (3, -2)  # I minoが縦に左端ギリギリout
+        self.assertFalse(dropping_mino.valid_place(field))
+        dropping_mino.position = (3, 8)  # I minoが縦に右端ギリギリ
+        self.assertTrue(dropping_mino.valid_place(field))
+        dropping_mino.position = (3, 9)  # I minoが縦に右端ギリギリout
+        self.assertFalse(dropping_mino.valid_place(field))
+
     def test_rend_mino(self):
         dropping_mino = DroppingMino(TetroMino.S)
         field = Field()
@@ -128,6 +165,15 @@ class TestDroppingMino(unittest.TestCase):
 
     def test_move_mino(self):
         dropping_mino = DroppingMino(TetroMino.I)
+        field = Field()
+        dropping_mino.move_mino(1, 0, field)  # move down
+        self.assertEqual(dropping_mino.position, (1, 3))
+        dropping_mino.move_mino(0, 1, field)  # move right
+        self.assertEqual(dropping_mino.position, (1, 4))
+        dropping_mino.move_mino(0, -1, field)  # move left
+        self.assertEqual(dropping_mino.position, (1, 3))
+
+        dropping_mino = DroppingMino(TetroMino.O)
         field = Field()
         dropping_mino.move_mino(1, 0, field)  # move down
         self.assertEqual(dropping_mino.position, (1, 4))
