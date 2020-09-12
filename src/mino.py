@@ -69,17 +69,104 @@ class TetroMino(Enum):
 
         return np.array(shape, dtype=bool)
 
+    def size(self) -> int:
+        """returns the size of mino"""
 
-class TetroMinoColor:
+        return self.get_shape().shape[0]
+
+
+class TetroMinoColor(Enum):
     """defines tetromino colors"""
 
-    YELLOW = 0xFFFF00
-    LIGHTBLUE = 0x00FFFF
-    PURPLE = 0x880088
-    ORANGE = 0xFFAA00
-    DARKBLUE = 0x0000FF
-    GREEN = 0x00FF00
-    RED = 0xFF0000
+    WHITE = 0
+    YELLOW = 1
+    LIGHTBLUE = 2
+    PURPLE = 3
+    ORANGE = 4
+    DARKBLUE = 5
+    GREEN = 6
+    RED = 7
+
+    def rend_RGB(self) -> int:
+        if self == TetroMinoColor.YELLOW:
+            return 0xFFFF00
+        elif self == TetroMinoColor.LIGHTBLUE:
+            return 0x00FFFF
+        elif self == TetroMinoColor.PURPLE:
+            return 0x880088
+        elif self == TetroMinoColor.ORANGE:
+            return 0xFFAA00
+        elif self == TetroMinoColor.DARKBLUE:
+            return 0x0000FF
+        elif self == TetroMinoColor.GREEN:
+            return 0x00FF00
+        elif self == TetroMinoColor.RED:
+            return 0xFF0000
+        else:
+            return 0xFFFFFF
+
+
+class Block:
+    filled: bool
+    color: TetroMinoColor
+
+    def __init__(self, filled: bool, color: TetroMinoColor):
+        self.filled = filled
+        self.color = color
+
+
+class Field:
+    height: int = 22
+    width: int = 10
+    grid: List[List[Block]]
+
+    def __init__(self):
+        self.grid = \
+            [[Block(False, TetroMinoColor.WHITE)
+              for i in range(self.width)]
+             for j in range(self.height)]
+
+    # 0 : 0000000000
+    # 1 : 0000000000
+    # 2 : 0000000000
+    # 3 : 0000000000
+    # 4 : 0000000000
+    # 5 : 0000000000
+    # 6 : 0000000000
+    # 7 : 0000000000
+    # 8 : 0000000000
+    # 9 : 0000000000
+    # 10: 0000000000
+    # 11: 0000000000
+    # 12: 0000000000
+    # 13: 0000000000
+    # 14: 0000000000
+    # 15: 1111001111
+    # 16: 1111001111
+    # 17: 1111001111
+    # 18: 1111001111
+    # 19: 1111001111
+    # 20: 1111001111
+    # 21: 1111001111
+
+    def set_default(self):
+        # テスト用に作るフィールド
+        for i in range(self.height):
+            if i < 15:
+                continue
+            for j in range(self.width):
+                if j == 4 or j == 5:
+                    continue
+                self.grid[i][j].filled = True
+
+    def print_field(self):
+        for i in range(self.height):
+            for j in range(self.width):
+                if self.grid[i][j].filled:
+                    print(1, end="")
+                else:
+                    print(0, end="")
+            print()
 
 
 class Direction(Enum):
@@ -143,12 +230,21 @@ class DroppingMino:
         shape = np.rot90(shape, rotation)
         return shape
 
-    def valid_place(self) -> bool:
+    def valid_place(self, field: Field) -> bool:
         """現在のminoがちゃんとした場所にいるかどうかを判定する"""
-        # TODO: フィールドを実装して参照を受け取るようにする
+
+        size = self.mino.size()
+        y, x = self.position
+        if y < 0 or y + size > field.height or x < 0 or x + size > field.width:
+            return False
+        shape = self.rend_mino()
+        for i in range(size):
+            for j in range(size):
+                if shape[i][j] and field.grid[y + i][x + j].filled:
+                    return False
         return True
 
-    def move_mino(self, i: int, j: int) -> bool:
+    def move_mino(self, i: int, j: int, field: Field) -> bool:
         """
         y方向にi, x方向にjだけminoを動かす
         もしだめだったらもとに戻してfalseを返す
@@ -157,33 +253,33 @@ class DroppingMino:
         prev_position = self.position
         y, x = self.position
         self.position = (y + i, x + j)
-        if self.valid_place():
+        if self.valid_place(field):
             return True
         else:
             self.position = prev_position
             return False
 
-    def spin_clockwise(self) -> bool:
+    def spin_clockwise(self, field: Field) -> bool:
         """
         minoを時計回りに90度回転
         もしだめだったらもとに戻してfalseを返す
         """
 
         self.direction = self.direction.next_dir_clockwise()
-        if self.valid_place():
+        if self.valid_place(field):
             return True
         else:
             self.direction = self.direction.next_dir_anticlockwise()
             return False
 
-    def spin_anticlockwise(self) -> bool:
+    def spin_anticlockwise(self, field: Field) -> bool:
         """
         minoを反時計回りに90度回転
         もしだめだったらもとに戻してfalseを返す
         """
 
         self.direction = self.direction.next_dir_anticlockwise()
-        if self.valid_place():
+        if self.valid_place(field):
             return True
         else:
             self.direction = self.direction.next_dir_clockwise()
