@@ -7,6 +7,40 @@ import numpy as np
 import random
 
 
+class TetroMinoColor(Enum):
+    """defines tetromino colors"""
+
+    WHITE = 0
+    YELLOW = 1
+    LIGHTBLUE = 2
+    PURPLE = 3
+    ORANGE = 4
+    DARKBLUE = 5
+    GREEN = 6
+    RED = 7
+    GRAY = 8
+
+    def rend_RGB(self) -> int:
+        if self == TetroMinoColor.YELLOW:
+            return 0xFFFF00
+        elif self == TetroMinoColor.LIGHTBLUE:
+            return 0x00FFFF
+        elif self == TetroMinoColor.PURPLE:
+            return 0x880088
+        elif self == TetroMinoColor.ORANGE:
+            return 0xFFAA00
+        elif self == TetroMinoColor.DARKBLUE:
+            return 0x0000FF
+        elif self == TetroMinoColor.GREEN:
+            return 0x00FF00
+        elif self == TetroMinoColor.RED:
+            return 0xFF0000
+        elif self == TetroMinoColor.WHITE:
+            return 0xFFFFFF
+        else:
+            return 0x777777
+
+
 class TetroMino(Enum):
     """defines tetromino types"""
 
@@ -70,41 +104,28 @@ class TetroMino(Enum):
 
         return np.array(shape, dtype=bool)
 
+    def get_color(self) -> TetroMinoColor:
+        if self == TetroMino.O:
+            return TetroMinoColor.YELLOW
+        elif self == TetroMino.I:
+            return TetroMinoColor.LIGHTBLUE
+        elif self == TetroMino.T:
+            return TetroMinoColor.PURPLE
+        elif self == TetroMino.L:
+            return TetroMinoColor.ORANGE
+        elif self == TetroMino.J:
+            return TetroMinoColor.DARKBLUE
+        elif self == TetroMino.Z:
+            return TetroMinoColor.GREEN
+        elif self == TetroMino.S:
+            return TetroMinoColor.RED
+        else:
+            return TetroMinoColor.WHITE
+
     def size(self) -> int:
         """returns the size of mino"""
 
         return self.get_shape().shape[0]
-
-
-class TetroMinoColor(Enum):
-    """defines tetromino colors"""
-
-    WHITE = 0
-    YELLOW = 1
-    LIGHTBLUE = 2
-    PURPLE = 3
-    ORANGE = 4
-    DARKBLUE = 5
-    GREEN = 6
-    RED = 7
-
-    def rend_RGB(self) -> int:
-        if self == TetroMinoColor.YELLOW:
-            return 0xFFFF00
-        elif self == TetroMinoColor.LIGHTBLUE:
-            return 0x00FFFF
-        elif self == TetroMinoColor.PURPLE:
-            return 0x880088
-        elif self == TetroMinoColor.ORANGE:
-            return 0xFFAA00
-        elif self == TetroMinoColor.DARKBLUE:
-            return 0x0000FF
-        elif self == TetroMinoColor.GREEN:
-            return 0x00FF00
-        elif self == TetroMinoColor.RED:
-            return 0xFF0000
-        else:
-            return 0xFFFFFF
 
 
 class Block:
@@ -159,6 +180,7 @@ class Field:
                 if j == 4 or j == 5:
                     continue
                 self.grid[i][j].filled = True
+                self.grid[i][j].color = TetroMinoColor.DARKBLUE
 
     def print_field(self):
         for i in range(self.height):
