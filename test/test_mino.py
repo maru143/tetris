@@ -4,7 +4,8 @@
 import unittest
 import numpy as np
 
-from src.mino import TetroMino, TetroMinoColor, DroppingMino, Direction, Field
+from src.mino import TetroMino, TetroMinoColor, DroppingMino, Direction, \
+    Field, TetroMinoGenerator
 
 
 class TestTetroMino(unittest.TestCase):
@@ -134,6 +135,28 @@ class TestDroppingMino(unittest.TestCase):
         self.assertEqual(dropping_mino.position, (1, 5))
         dropping_mino.move_mino(0, -1, field)  # move left
         self.assertEqual(dropping_mino.position, (1, 4))
+
+
+class TestTetroMinoGenerator(unittest.TestCase):
+    def test_gen(self):
+        generator = TetroMinoGenerator()
+        test_count = {
+            TetroMino.O: 0,
+            TetroMino.I: 0,
+            TetroMino.T: 0,
+            TetroMino.L: 0,
+            TetroMino.J: 0,
+            TetroMino.Z: 0,
+            TetroMino.S: 0
+        }
+        max_iter = 100
+        length = len(test_count)
+        for i in range(length * max_iter):
+            if i % length == 0:
+                for count in test_count.values():
+                    self.assertEqual(count, i / length)
+            mino = generator.gen()
+            test_count[mino] += 1
 
 
 if __name__ == '__main__':

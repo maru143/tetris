@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from enum import Enum
-from typing import List
+from typing import List, Dict
 import numpy as np
+import random
 
 
 class TetroMino(Enum):
@@ -284,3 +285,38 @@ class DroppingMino:
         else:
             self.direction = self.direction.next_dir_clockwise()
             return False
+
+
+class TetroMinoGenerator:
+    """bag systemに従ってminoを生成する"""
+
+    dropped_count: Dict[TetroMino, int]
+    loops: int  # バッグが何周目か
+
+    def __init__(self):
+        self.dropped_count = {
+            TetroMino.O: 0,
+            TetroMino.I: 0,
+            TetroMino.T: 0,
+            TetroMino.L: 0,
+            TetroMino.J: 0,
+            TetroMino.Z: 0,
+            TetroMino.S: 0
+        }
+        self.loops = 1
+
+    def gen(self) -> TetroMino:
+        """returns new mino"""
+
+        candidates = [mino
+                      for mino, count in self.dropped_count.items()
+                      if count < self.loops
+                      ]  # このバッグでまだ出てないものを集める
+
+        if not candidates:
+            self.loops += 1
+            return self.gen()
+        else:
+            mino = random.choice(candidates)
+            self.dropped_count[mino] += 1
+            return mino
