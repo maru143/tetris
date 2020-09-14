@@ -6,7 +6,7 @@ from collections import deque
 from typing import Deque, List
 
 from src.mino import Field, DroppingMino, TetroMino, TetroMinoGenerator, \
-                     TetroMinoColor
+    TetroMinoColor
 
 
 class Tetris:
@@ -30,6 +30,7 @@ class Tetris:
 
     def rend_field_color(self) -> List[List[TetroMinoColor]]:
         """returns complete field color for painting"""
+
         field_color = [[TetroMinoColor.WHITE
                         for i in range(self.field.width)]
                        for j in range(self.field.height)]
@@ -64,7 +65,7 @@ class Tetris:
                     continue
                 field_color[y + i][x + j] = color
 
-        # for debugging
+        # stderr output for debugging
         for i in range(self.field.height):
             print(" {:<2}:".format(i), end=" ", file=sys.stderr)
             for j in range(self.field.width):
@@ -72,4 +73,3 @@ class Tetris:
             print(file=sys.stderr)
 
         return field_color
-

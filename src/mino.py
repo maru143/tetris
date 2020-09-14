@@ -3,6 +3,7 @@
 
 from enum import Enum
 from typing import List, Dict
+import sys
 import numpy as np
 import random
 
@@ -172,7 +173,8 @@ class Field:
     # 21: 1111001111
 
     def set_default(self):
-        # テスト用に作るフィールド
+        """struct the default field for testing (see above)"""
+
         for i in range(self.height):
             if i < 15:
                 continue
@@ -183,13 +185,15 @@ class Field:
                 self.grid[i][j].color = TetroMinoColor.DARKBLUE
 
     def print_field(self):
+        """output the field to stderr"""
+
         for i in range(self.height):
             for j in range(self.width):
                 if self.grid[i][j].filled:
-                    print(1, end="")
+                    print(1, end="", file=sys.stderr)
                 else:
-                    print(0, end="")
-            print()
+                    print(0, end="", file=sys.stderr)
+            print(file=sys.stderr)
 
 
 class Direction(Enum):
@@ -201,14 +205,7 @@ class Direction(Enum):
     def get_rotation_times(self) -> int:
         """returns clockwise rotation times of block"""
 
-        if self == Direction.NORTH:
-            return 0
-        elif self == Direction.WEST:
-            return 1
-        elif self == Direction.SOUTH:
-            return 2
-        else:
-            return 3
+        return self.value
 
     def next_dir_clockwise(self):
         """returns next cw-direction"""
@@ -260,8 +257,8 @@ class DroppingMino:
         """現在のminoがちゃんとした場所にいるかどうかを判定する"""
 
         size = self.mino.size()
-        y, x = self.position
         shape = self.rend_mino()
+        y, x = self.position
         for i in range(size):
             for j in range(size):
                 if not shape[i][j]:
