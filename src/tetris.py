@@ -14,6 +14,7 @@ class Tetris:
     mino_generator: TetroMinoGenerator
     dropping_mino: DroppingMino
     holding_mino: TetroMino
+    hold_just_now: bool
     next_mino_num: int
     next_minos: Deque[TetroMino]
 
@@ -24,7 +25,8 @@ class Tetris:
         self.field = Field()
         self.mino_generator = TetroMinoGenerator()
         self.dropping_mino = DroppingMino(self.mino_generator.gen())
-        self.holding_mino = TetroMino.Empty
+        self.holding_mino = None
+        self.hold_just_now = False
         self.next_mino_num = 5
         self.next_minos = deque()
 
@@ -33,6 +35,11 @@ class Tetris:
 
         for i in range(self.next_mino_num):
             self.next_minos.append(self.mino_generator.gen())
+
+    def generate_next_mino(self) -> TetroMino:
+        next_mino = self.next_minos.popleft()
+        self.next_minos.append(self.mino_generator.gen())
+        return next_mino
 
     def rend_field_color(self) -> List[List[TetroMinoColor]]:
         """returns complete field color for painting"""
@@ -108,6 +115,7 @@ class Tetris:
 
         self.clear_lines()
         self.drop_next_mino()
+        self.hold_just_now = False
 
     def drop_next_mino(self):
         """take out mino from next and restock it"""
@@ -172,3 +180,16 @@ class Tetris:
 
     def spin_anticlockwise(self):
         self.dropping_mino.spin_anticlockwise(self.field)
+
+    def hold(self) -> bool:
+        if self.hold_just_now:
+            return False
+        if not self.holding_mino:
+            self.holding_mino = self.dropping_mino.mino
+            self.dropping_mino = DroppingMino(self.generate_next_mino())
+        else:
+            mino = self.holding_mino
+            self.holding_mino = self.dropping_mino.mino
+            self.dropping_mino = DroppingMino(mino)
+        self.hold_just_now = True
+        return True
