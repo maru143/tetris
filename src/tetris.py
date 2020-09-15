@@ -5,7 +5,7 @@ import sys
 from collections import deque
 from typing import Deque, List
 
-from src.mino import Field, DroppingMino, TetroMino, TetroMinoGenerator, \
+from mino import Field, DroppingMino, TetroMino, TetroMinoGenerator, \
     TetroMinoColor, Block
 
 

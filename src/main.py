@@ -6,8 +6,8 @@ from PyQt5.QtCore import Qt, QBasicTimer, QTimerEvent
 from PyQt5.QtGui import QPaintEvent, QKeyEvent, QPainter, QColor
 from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, QLabel
 
-from src.tetris import Tetris
-from src.mino import TetroMinoColor
+from tetris import Tetris
+from mino import TetroMinoColor
 
 
 class ExampleWidget(QMainWindow):
