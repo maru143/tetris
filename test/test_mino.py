@@ -167,20 +167,20 @@ class TestDroppingMino(unittest.TestCase):
         dropping_mino = DroppingMino(TetroMino.I)
         field = Field()
         dropping_mino.move_mino(1, 0, field)  # move down
-        self.assertEqual(dropping_mino.position, (1, 3))
+        self.assertEqual(dropping_mino.position, (3, 3))
         dropping_mino.move_mino(0, 1, field)  # move right
-        self.assertEqual(dropping_mino.position, (1, 4))
+        self.assertEqual(dropping_mino.position, (3, 4))
         dropping_mino.move_mino(0, -1, field)  # move left
-        self.assertEqual(dropping_mino.position, (1, 3))
+        self.assertEqual(dropping_mino.position, (3, 3))
 
         dropping_mino = DroppingMino(TetroMino.O)
         field = Field()
         dropping_mino.move_mino(1, 0, field)  # move down
-        self.assertEqual(dropping_mino.position, (1, 4))
+        self.assertEqual(dropping_mino.position, (3, 4))
         dropping_mino.move_mino(0, 1, field)  # move right
-        self.assertEqual(dropping_mino.position, (1, 5))
+        self.assertEqual(dropping_mino.position, (3, 5))
         dropping_mino.move_mino(0, -1, field)  # move left
-        self.assertEqual(dropping_mino.position, (1, 4))
+        self.assertEqual(dropping_mino.position, (3, 4))
 
 
 class TestTetroMinoGenerator(unittest.TestCase):

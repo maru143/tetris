@@ -241,9 +241,9 @@ class DroppingMino:
         self.mino = mino
         self.direction = Direction.NORTH
         if mino == TetroMino.O:  # O minoだけは真ん中から出すよう調節
-            self.position = (0, 4)
+            self.position = (2, 4)
         else:
-            self.position = (0, 3)
+            self.position = (2, 3)
 
     def rend_mino(self) -> np.ndarray:
         """現在のdirectionに合わせたminoの形を返す"""
