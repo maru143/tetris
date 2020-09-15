@@ -7,7 +7,7 @@ from PyQt5.QtGui import QPaintEvent, QKeyEvent, QPainter, QColor
 from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, QLabel
 
 from tetris import Tetris
-from mino import TetroMinoColor
+from mino import TetroMinoColor, TetroMino
 
 
 class ExampleWidget(QMainWindow):
@@ -47,14 +47,16 @@ class ExampleWidget(QMainWindow):
         self.hold_offset_x = 35
         self.hold_offset_y = 100
         self.next_block_size = 15
-        self.next_offset_x = 35
-        self.next_offset_y = 80
+        self.next_offset_x = 320
+        self.next_offset_y = 90
 
     def init_tetris(self) -> None:
         self.tetris = Tetris()
 
         hold_label = QLabel("HOLD", self)
-        hold_label.move(40, 70)
+        hold_label.move(40, 60)
+        next_label = QLabel("NEXT", self)
+        next_label.move(330, 60)
 
     def init_timer(self) -> None:
         self.timer = QBasicTimer()
@@ -166,6 +168,20 @@ class ExampleWidget(QMainWindow):
                          pxl_x + block_size - 1,
                          pxl_y + block_size - 4)
 
+    def paint_mino(self, y: int, x: int, mino: TetroMino, painter: QPainter):
+        color = QColor(mino.get_color().rend_RGB())
+        shape = mino.get_shape()
+        size = mino.size()
+
+        for i in range(size):
+            for j in range(size):
+                if not shape[i][j]:
+                    continue
+                self.paint_block(i, j,
+                                 self.hold_offset_y, self.hold_offset_x,
+                                 self.hold_block_size,
+                                 color, painter)
+
     def paint_field(self, painter: QPainter):
         field_color = self.tetris.rend_field_color()
         for y in range(self.tetris.field.height):
@@ -187,7 +203,7 @@ class ExampleWidget(QMainWindow):
                                      field_color[y][x].rend_RGB(),
                                      painter)
 
-    def paint_hold(self, paint: QPainter):
+    def paint_hold(self, painter: QPainter):
         if not self.tetris.holding_mino:
             return
 
@@ -206,10 +222,22 @@ class ExampleWidget(QMainWindow):
                 self.paint_block(i, j,
                                  self.hold_offset_y, self.hold_offset_x,
                                  self.hold_block_size,
-                                 color, paint)
+                                 color, painter)
 
-    def paint_next(self, paint: QPainter):
-        pass
+    def paint_next(self, painter: QPainter):
+        for i, mino in enumerate(self.tetris.next_minos):
+            color = QColor(mino.get_color().rend_RGB())
+            shape = mino.get_shape()
+            size = mino.size()
+
+            for y in range(size):
+                for x in range(size):
+                    if not shape[y][x]:
+                        continue
+                    self.paint_block(y + i * 4, x,
+                                     self.next_offset_y, self.next_offset_x,
+                                     self.next_block_size,
+                                     color, painter)
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
         """config for keyboard event handler"""
