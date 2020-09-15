@@ -16,7 +16,9 @@ class Tetris:
     holding_mino: TetroMino
     next_mino_num: int
     next_minos: Deque[TetroMino]
+
     speed: int  # mino falls every {speed} ms
+    is_game_over: bool
 
     def __init__(self):
         self.field = Field()
@@ -25,7 +27,9 @@ class Tetris:
         self.holding_mino = TetroMino.Empty
         self.next_mino_num = 5
         self.next_minos = deque()
+
         self.speed = 1000
+        self.is_game_over = False
 
         for i in range(self.next_mino_num):
             self.next_minos.append(self.mino_generator.gen())
@@ -109,9 +113,8 @@ class Tetris:
         """take out mino from next and restock it"""
 
         self.dropping_mino = DroppingMino(self.next_minos.popleft())
-        if self.is_game_over():
-            print("GAME_OVER")
-            sys.exit(0)
+        if self.check_game_over():
+            self.is_game_over = True
         self.next_minos.append(self.mino_generator.gen())
 
     def clear_lines(self) -> None:
@@ -143,9 +146,9 @@ class Tetris:
         #     print(file=sys.stderr)
 
         self.field.grid = new_grid
-        self.dump_field()
+        # self.dump_field()
 
-    def is_game_over(self) -> bool:
+    def check_game_over(self) -> bool:
         if not self.dropping_mino.valid_place(self.field):
             return True
         return False

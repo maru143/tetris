@@ -29,7 +29,7 @@ class ExampleWidget(QMainWindow):
 
     def init_window(self) -> None:
         self.resize(400, 500)
-        self.offset_x = 50
+        self.offset_x = 105
         self.offset_y = 30
         self.setWindowTitle('TETRIS')
 
@@ -59,6 +59,14 @@ class ExampleWidget(QMainWindow):
     #     self.statusBar().showMessage("Goodbye")
     #     self.close()
 
+    def end_game(self) -> None:
+        self.timer.stop()
+        self.statusBar().showMessage("GAMEOVER")
+
+    def timer_reset(self) -> None:
+        self.timer.stop()
+        self.timer.start(self.tetris.speed, self)
+
     def timerEvent(self, event: QTimerEvent) -> None:
         """config for timer event handler"""
 
@@ -68,10 +76,12 @@ class ExampleWidget(QMainWindow):
                 self.tetris.dropped()
 
             self.update()
-            # self.tetris.dump_field()
 
     def paintEvent(self, event: QPaintEvent) -> None:
         """config for painting tetris field"""
+
+        if self.tetris.is_game_over:
+            self.end_game()
 
         painter = QPainter(self)
 
@@ -144,16 +154,22 @@ class ExampleWidget(QMainWindow):
     def keyPressEvent(self, event: QKeyEvent) -> None:
         """config for keyboard event handler"""
 
+        if self.tetris.is_game_over:
+            return
+
         if event.key() == Qt.Key_Right:
             self.tetris.move_right()
         elif event.key() == Qt.Key_Left:
             self.tetris.move_left()
         elif event.key() == Qt.Key_Up:
             self.tetris.hard_drop()
+            self.timer_reset()
         elif event.key() == Qt.Key_Down:
             self.tetris.move_down()
+            self.timer_reset()
         elif event.key() == Qt.Key_Space:
             self.tetris.hard_drop()
+            self.timer_reset()
         elif event.key() == Qt.Key_X:
             self.tetris.spin_clockwise()
         elif event.key() == Qt.Key_Z:
