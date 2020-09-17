@@ -181,8 +181,7 @@ class Field:
             for j in range(self.width):
                 if j == 4 or j == 5:
                     continue
-                self.grid[i][j].filled = True
-                self.grid[i][j].color = TetroMinoColor.DARKBLUE
+                self.grid[i][j] = Block(True, TetroMinoColor.DARKBLUE)
 
     def print_field(self):
         """output the field to stderr"""

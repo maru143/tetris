@@ -120,7 +120,7 @@ class ExampleWidget(QMainWindow):
         pxl_y = y * block_size + offset_y
 
         painter.fillRect(pxl_x + 1, pxl_y + 1,
-                         block_size, block_size,
+                         block_size - 1, block_size - 1,
                          color)
 
         painter.setPen(color.lighter())
@@ -143,7 +143,7 @@ class ExampleWidget(QMainWindow):
                           offset_y: int, offset_x: int,
                           block_size: int,
                           color: int, painter: QPainter):
-        """draws block's foot at (y, x)"""
+        """draws block's foot at (y, x) = (1, _)"""
 
         color = QColor(color)
         pxl_x = x * block_size + offset_x
@@ -169,19 +169,19 @@ class ExampleWidget(QMainWindow):
                          pxl_x + block_size - 1,
                          pxl_y + block_size - 4)
 
-    def paint_mino(self, y: int, x: int, mino: TetroMino, painter: QPainter):
-        color = QColor(mino.get_color().rend_RGB())
-        shape = mino.get_shape()
-        size = mino.size()
-
-        for i in range(size):
-            for j in range(size):
-                if not shape[i][j]:
-                    continue
-                self.paint_block(i, j,
-                                 self.hold_offset_y, self.hold_offset_x,
-                                 self.hold_block_size,
-                                 color, painter)
+    # def paint_mino(self, y: int, x: int, mino: TetroMino, painter: QPainter):
+    #     color = QColor(mino.get_color().rend_RGB())
+    #     shape = mino.get_shape()
+    #     size = mino.size()
+    #
+    #     for i in range(size):
+    #         for j in range(size):
+    #             if not shape[i][j]:
+    #                 continue
+    #             self.paint_block(i, j,
+    #                              self.hold_offset_y, self.hold_offset_x,
+    #                              self.hold_block_size,
+    #                              color, painter)
 
     def paint_field(self, painter: QPainter):
         field_color = self.tetris.rend_field_color()
@@ -216,11 +216,11 @@ class ExampleWidget(QMainWindow):
         if self.tetris.hold_just_now:
             color = QColor(TetroMinoColor.GRAY.rend_RGB())
 
-        for i in range(size):
-            for j in range(size):
-                if not shape[i][j]:
+        for y in range(size):
+            for x in range(size):
+                if not shape[y][x]:
                     continue
-                self.paint_block(i, j,
+                self.paint_block(y, x,
                                  self.hold_offset_y, self.hold_offset_x,
                                  self.hold_block_size,
                                  color, painter)
