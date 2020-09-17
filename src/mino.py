@@ -25,11 +25,11 @@ class TetroMinoColor(Enum):
         if self == TetroMinoColor.YELLOW:
             return 0xFFFF00
         elif self == TetroMinoColor.LIGHTBLUE:
-            return 0x00FFFF
+            return 0x00CCFF
         elif self == TetroMinoColor.PURPLE:
-            return 0x880088
+            return 0xBB00FF
         elif self == TetroMinoColor.ORANGE:
-            return 0xFFAA00
+            return 0xFF9900
         elif self == TetroMinoColor.DARKBLUE:
             return 0x0000FF
         elif self == TetroMinoColor.GREEN:
@@ -37,7 +37,7 @@ class TetroMinoColor(Enum):
         elif self == TetroMinoColor.RED:
             return 0xFF0000
         elif self == TetroMinoColor.WHITE:
-            return 0xFFFFFF
+            return 0xEEEEEE
         else:
             return 0x777777
 
