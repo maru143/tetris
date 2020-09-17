@@ -111,8 +111,7 @@ class Tetris:
             for j in range(size):
                 if not shape[i][j]:
                     continue
-                self.field.grid[y + i][x + j].filled = True
-                self.field.grid[y + i][x + j].color = color
+                self.field.grid[y + i][x + j] = Block(True, color)
 
         self.clear_lines()
         self.drop_next_mino()
