@@ -81,8 +81,8 @@ class TestTetroMinoColor(unittest.TestCase):
 
 class TestDroppingMino(unittest.TestCase):
     def test_spin(self):
-        dropping_mino = DroppingMino(TetroMino.T)
         field = Field()
+        dropping_mino = DroppingMino(TetroMino.T, field)
         dropping_mino.spin_clockwise(field)
         self.assertEqual(dropping_mino.direction, Direction.EAST)
 
@@ -90,8 +90,8 @@ class TestDroppingMino(unittest.TestCase):
         self.assertEqual(dropping_mino.direction, Direction.NORTH)
 
     def test_valid_place(self):
-        dropping_mino = DroppingMino(TetroMino.Z)
         field = Field()
+        dropping_mino = DroppingMino(TetroMino.Z, field)
         field.set_default()
         # field.print_field()
 
@@ -118,7 +118,7 @@ class TestDroppingMino(unittest.TestCase):
         dropping_mino.position = (10, -1)  # 回転した状態で左端ギリギリ
         self.assertTrue(dropping_mino.valid_place(field))
 
-        dropping_mino = DroppingMino(TetroMino.I)
+        dropping_mino = DroppingMino(TetroMino.I, field)
         dropping_mino.position = (3, 0)  # 真横状態で左端ギリギリ
         self.assertTrue(dropping_mino.valid_place(field))
         dropping_mino.position = (3, -1)  # 真横状態で左端ギリギリout
@@ -146,8 +146,8 @@ class TestDroppingMino(unittest.TestCase):
         self.assertFalse(dropping_mino.valid_place(field))
 
     def test_rend_mino(self):
-        dropping_mino = DroppingMino(TetroMino.S)
         field = Field()
+        dropping_mino = DroppingMino(TetroMino.S, field)
         dropping_mino.spin_clockwise(field)
         desired_shape = np.array(
             [[0, 1, 0],
@@ -164,8 +164,8 @@ class TestDroppingMino(unittest.TestCase):
         self.assertTrue(np.allclose(dropping_mino.rend_mino(), desired_shape))
 
     def test_move_mino(self):
-        dropping_mino = DroppingMino(TetroMino.I)
         field = Field()
+        dropping_mino = DroppingMino(TetroMino.I, field)
         dropping_mino.move_mino(1, 0, field)  # move down
         self.assertEqual(dropping_mino.position, (3, 3))
         dropping_mino.move_mino(0, 1, field)  # move right
@@ -173,8 +173,7 @@ class TestDroppingMino(unittest.TestCase):
         dropping_mino.move_mino(0, -1, field)  # move left
         self.assertEqual(dropping_mino.position, (3, 3))
 
-        dropping_mino = DroppingMino(TetroMino.O)
-        field = Field()
+        dropping_mino = DroppingMino(TetroMino.O, field)
         dropping_mino.move_mino(1, 0, field)  # move down
         self.assertEqual(dropping_mino.position, (3, 4))
         dropping_mino.move_mino(0, 1, field)  # move right

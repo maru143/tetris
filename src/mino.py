@@ -236,16 +236,23 @@ class DroppingMino:
     mino: TetroMino
     direction: Direction
 
-    def __init__(self, mino: TetroMino):
+    def __init__(self, mino: TetroMino, field: Field):
         self.mino = mino
         self.direction = Direction.NORTH
-        if mino == TetroMino.O:  # O minoだけは真ん中から出すよう調節
+        if mino == TetroMino.O:  # arrangement for O mino
             self.position = (2, 4)
         else:
             self.position = (2, 3)
 
+        # if position is not valid move_up up to 2 times
+        for i in range(3):
+            if self.valid_place(field):
+                continue
+            y, x = self.position
+            self.position = (y - 1, x)
+
     def rend_mino(self) -> np.ndarray:
-        """現在のdirectionに合わせたminoの形を返す"""
+        """returns the shape corresponding to current direction"""
 
         shape = self.mino.get_shape()
         rotation = self.direction.get_rotation_times()
@@ -253,7 +260,10 @@ class DroppingMino:
         return shape
 
     def valid_place(self, field: Field) -> bool:
-        """現在のminoがちゃんとした場所にいるかどうかを判定する"""
+        """
+        judges whether the dropping mino is in field and
+        blocks are not overlapping each other
+        """
 
         size = self.mino.size()
         shape = self.rend_mino()
@@ -273,8 +283,8 @@ class DroppingMino:
 
     def move_mino(self, i: int, j: int, field: Field) -> bool:
         """
-        y方向にi, x方向にjだけminoを動かす
-        もしだめだったらもとに戻してfalseを返す
+        move mino to (y + i, x + j)
+        if impossible undo it
         """
 
         prev_position = self.position
@@ -288,8 +298,8 @@ class DroppingMino:
 
     def spin_clockwise(self, field: Field) -> bool:
         """
-        minoを時計回りに90度回転
-        もしだめだったらもとに戻してfalseを返す
+        change the direction to next (clockwise)
+        if impossible undo it
         """
 
         self.direction = self.direction.next_dir_clockwise()
@@ -301,8 +311,8 @@ class DroppingMino:
 
     def spin_anticlockwise(self, field: Field) -> bool:
         """
-        minoを反時計回りに90度回転
-        もしだめだったらもとに戻してfalseを返す
+        change the direction to next (anticlockwise)
+        if impossible undo it
         """
 
         self.direction = self.direction.next_dir_anticlockwise()
@@ -314,7 +324,7 @@ class DroppingMino:
 
 
 class TetroMinoGenerator:
-    """bag systemに従ってminoを生成する"""
+    """generates mino following the bag system rule"""
 
     dropped_count: Dict[TetroMino, int]
     loops: int  # バッグが何周目か

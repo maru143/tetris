@@ -25,7 +25,8 @@ class Tetris:
     def __init__(self):
         self.field = Field()
         self.mino_generator = TetroMinoGenerator()
-        self.dropping_mino = DroppingMino(self.mino_generator.gen())
+        self.dropping_mino = DroppingMino(self.mino_generator.gen(),
+                                          self.field)
         self.holding_mino = None
         self.hold_just_now = False
         self.next_mino_num = 5
@@ -120,7 +121,8 @@ class Tetris:
     def drop_next_mino(self):
         """take out mino from next and restock it"""
 
-        self.dropping_mino = DroppingMino(self.next_minos.popleft())
+        self.dropping_mino = DroppingMino(self.next_minos.popleft(),
+                                          self.field)
         if self.check_game_over():
             self.is_game_over = True
         self.next_minos.append(self.mino_generator.gen())
@@ -186,10 +188,11 @@ class Tetris:
             return False
         if not self.holding_mino:
             self.holding_mino = self.dropping_mino.mino
-            self.dropping_mino = DroppingMino(self.generate_next_mino())
+            self.dropping_mino = DroppingMino(self.generate_next_mino(),
+                                              self.field)
         else:
             mino = self.holding_mino
             self.holding_mino = self.dropping_mino.mino
-            self.dropping_mino = DroppingMino(mino)
+            self.dropping_mino = DroppingMino(mino, self.field)
         self.hold_just_now = True
         return True

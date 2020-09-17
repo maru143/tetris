@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, QLabel
 
 sys.path.append("src/")
 from tetris import Tetris
-from mino import TetroMinoColor, TetroMino
+from mino import TetroMinoColor
 
 
 class ExampleWidget(QMainWindow):
