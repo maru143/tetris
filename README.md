@@ -10,7 +10,7 @@ This is a tetris game just for learning Python.
 
 #### Dependencies
 
-Running this projects requires:
+Running this tetris game requires:
 
 - A Python interpreter (version 3.5 or later)
 
@@ -18,9 +18,9 @@ Running this projects requires:
 
 - PyQt5
 
-  
 
-If you have appropriate python interpreter, you can install these requirements by running the folloing at the root directory:
+
+If you have an appropriate Python interpreter, you can install these requirements by running the following at the root directory:
 
 ```bash
 $ pip install -r requirements.txt 
