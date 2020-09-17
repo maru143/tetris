@@ -5,6 +5,7 @@ import sys
 from collections import deque
 from typing import Deque, List
 
+sys.path.append("src/")
 from mino import Field, DroppingMino, TetroMino, TetroMinoGenerator, \
     TetroMinoColor, Block
 
