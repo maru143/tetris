@@ -97,6 +97,11 @@ class Window(QMainWindow):
             self.timer.start(self.tetris.speed, self)
             self.statusBar().showMessage("")
 
+    def restart(self) -> None:
+        self.timer_reset()
+        self.tetris.__init__()
+        self.statusBar().showMessage("RESTARTED")
+
     def timer_reset(self) -> None:
         self.timer.stop()
         self.timer.start(self.tetris.speed, self)
@@ -288,6 +293,8 @@ class Window(QMainWindow):
                 self.timer_reset()
         elif event.key() == Qt.Key_P:
             self.pause_game()
+        elif event.key() == Qt.Key_R:
+            self.restart()
         elif event.key() == Qt.Key_Escape:
             self.close()
         else:

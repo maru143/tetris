@@ -52,6 +52,7 @@ You can play using your keyboard:
 | z                       | spin left  |
 | x                       | spin right |
 | p                       | pause      |
+| r                       | restart    |
 | ESC                     | quit game  |
 
 
@@ -63,7 +64,7 @@ This tetris supports the following features:
 - [x] Hold
 - [x] Next (you can see 5 next minos)
 - [x] Bag randomizer
-- [ ] Super rotation system
+- [x] Super rotation system
 - [ ] T-spin 
 - [ ] display scores
 - [ ] restart button
