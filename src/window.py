@@ -85,7 +85,7 @@ class Window(QMainWindow):
 
     def end_game(self) -> None:
         self.timer.stop()
-        self.statusBar().showMessage("GAMEOVER")
+        self.statusBar().showMessage("GAMEOVER (To retry, press \"R\" key)")
 
     def pause_game(self) -> None:
         if not self.tetris.is_paused:
@@ -264,7 +264,7 @@ class Window(QMainWindow):
     def keyPressEvent(self, event: QKeyEvent) -> None:
         """config for keyboard event handler"""
 
-        if self.tetris.is_game_over:
+        if self.tetris.is_game_over and event.key() != Qt.Key_R:
             return
 
         if self.tetris.is_paused and event.key() != Qt.Key_P:
