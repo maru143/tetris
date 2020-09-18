@@ -67,18 +67,6 @@ class TestTetroMino(unittest.TestCase):
         self.assertTrue(np.allclose(mino.get_shape(), desired_shape))
 
 
-class TestTetroMinoColor(unittest.TestCase):
-    def test_color(self):
-        self.assertEqual(TetroMinoColor.YELLOW.rend_RGB(), 0xFFFF00)
-        self.assertEqual(TetroMinoColor.LIGHTBLUE.rend_RGB(), 0x00FFFF)
-        self.assertEqual(TetroMinoColor.PURPLE.rend_RGB(), 0x880088)
-        self.assertEqual(TetroMinoColor.ORANGE.rend_RGB(), 0xFFAA00)
-        self.assertEqual(TetroMinoColor.DARKBLUE.rend_RGB(), 0x0000FF)
-        self.assertEqual(TetroMinoColor.GREEN.rend_RGB(), 0x00FF00)
-        self.assertEqual(TetroMinoColor.RED.rend_RGB(), 0xFF0000)
-        self.assertEqual(TetroMinoColor.WHITE.rend_RGB(), 0xFFFFFF)
-
-
 class TestDroppingMino(unittest.TestCase):
     def test_spin(self):
         field = Field()

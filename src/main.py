@@ -11,26 +11,36 @@ from tetris import Tetris
 from mino import TetroMinoColor
 
 
+class GuiInfo:
+    """
+    determines painting block size and
+    where to paint it on the window
+    """
+
+    block_size: int
+    offset_x: int
+    offset_y: int
+
+    def __init__(self, size: int, x: int, y: int):
+        self.block_size = size
+        self.offset_x = x
+        self.offset_y = y
+
+
 class ExampleWidget(QMainWindow):
     timer: QBasicTimer
     tetris: Tetris
 
-    field_block_size: int
-    field_offset_x: int
-    field_offset_y: int
-    hold_block_size: int
-    hold_offset_x: int
-    hold_offset_y: int
-    next_block_size: int
-    next_offset_x: int
-    next_offset_y: int
+    field_info: GuiInfo
+    hold_info: GuiInfo
+    next_info: GuiInfo
 
     def __init__(self):
 
         super().__init__()
 
         self.init_window()
-        self.init_painter()
+        self.init_gui_info()
         self.init_tetris()
         self.init_timer()
         # self.init_buttons()
@@ -40,16 +50,10 @@ class ExampleWidget(QMainWindow):
         self.resize(400, 500)
         self.setWindowTitle('TETRIS')
 
-    def init_painter(self) -> None:
-        self.field_block_size = 18
-        self.field_offset_x = 105
-        self.field_offset_y = 30
-        self.hold_block_size = 15
-        self.hold_offset_x = 35
-        self.hold_offset_y = 100
-        self.next_block_size = 15
-        self.next_offset_x = 320
-        self.next_offset_y = 90
+    def init_gui_info(self) -> None:
+        self.field_info = GuiInfo(18, 105, 30)
+        self.hold_info = GuiInfo(15, 35, 100)
+        self.next_info = GuiInfo(15, 320, 90)
 
     def init_tetris(self) -> None:
         self.tetris = Tetris()
@@ -191,16 +195,16 @@ class ExampleWidget(QMainWindow):
                     continue
                 elif y == 1:
                     self.paint_block_below(y, x,
-                                           self.field_offset_y,
-                                           self.field_offset_x,
-                                           self.field_block_size,
+                                           self.field_info.offset_y,
+                                           self.field_info.offset_x,
+                                           self.field_info.block_size,
                                            field_color[y][x].rend_RGB(),
                                            painter)
                 else:
                     self.paint_block(y, x,
-                                     self.field_offset_y,
-                                     self.field_offset_x,
-                                     self.field_block_size,
+                                     self.field_info.offset_y,
+                                     self.field_info.offset_x,
+                                     self.field_info.block_size,
                                      field_color[y][x].rend_RGB(),
                                      painter)
 
@@ -221,8 +225,9 @@ class ExampleWidget(QMainWindow):
                 if not shape[y][x]:
                     continue
                 self.paint_block(y, x,
-                                 self.hold_offset_y, self.hold_offset_x,
-                                 self.hold_block_size,
+                                 self.hold_info.offset_y,
+                                 self.hold_info.offset_x,
+                                 self.hold_info.block_size,
                                  color, painter)
 
     def paint_next(self, painter: QPainter):
@@ -236,8 +241,9 @@ class ExampleWidget(QMainWindow):
                     if not shape[y][x]:
                         continue
                     self.paint_block(y + i * 4, x,
-                                     self.next_offset_y, self.next_offset_x,
-                                     self.next_block_size,
+                                     self.next_info.offset_y,
+                                     self.next_info.offset_x,
+                                     self.next_info.block_size,
                                      color, painter)
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
