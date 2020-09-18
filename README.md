@@ -46,11 +46,11 @@ You can play using your keyboard:
 | ←                       | move left  |
 | ↓                       | soft drop  |
 | ↑, SPACE                | hard drop  |
+| SHIFT                   | hold       |
 | z                       | spin left  |
 | x                       | spin right |
-| SHIFT                   | hold       |
+| p                       | pause      |
 | ESC                     | quit game  |
-| p (not implemented yet) | pause      |
 
 
 

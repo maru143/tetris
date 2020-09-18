@@ -20,6 +20,7 @@ class Tetris:
     next_minos: Deque[TetroMino]
 
     speed: int  # mino falls every {speed} ms
+    is_paused: bool
     is_game_over: bool
 
     def __init__(self):
@@ -33,6 +34,7 @@ class Tetris:
         self.next_minos = deque()
 
         self.speed = 1000
+        self.is_paused = False
         self.is_game_over = False
 
         for i in range(self.next_mino_num):
@@ -137,8 +139,6 @@ class Tetris:
 
         delete_count = self.field.height - len(remained_lines)
 
-        # print(delete_count, file=sys.stderr)
-
         # push new lines
         new_lines = [[Block(False, TetroMinoColor.WHITE)
                       for j in range(self.field.width)]
@@ -146,17 +146,7 @@ class Tetris:
 
         new_grid = new_lines + remained_lines
 
-        # for i in range(len(new_grid)):
-        #     print(" {:<2}:".format(i), end=" ", file=sys.stderr)
-        #     for j in range(self.field.width):
-        #         value = new_grid[i][j].color.value
-        #         if value == 0:
-        #             value = '_'
-        #         print(value, end="", file=sys.stderr)
-        #     print(file=sys.stderr)
-
         self.field.grid = new_grid
-        # self.dump_field()
 
     def check_game_over(self) -> bool:
         if not self.dropping_mino.valid_place(self.field):

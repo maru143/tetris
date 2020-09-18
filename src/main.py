@@ -87,6 +87,16 @@ class ExampleWidget(QMainWindow):
         self.timer.stop()
         self.statusBar().showMessage("GAMEOVER")
 
+    def pause_game(self) -> None:
+        if not self.tetris.is_paused:
+            self.tetris.is_paused = True
+            self.timer.stop()
+            self.statusBar().showMessage("PAUSE")
+        else:
+            self.tetris.is_paused = False
+            self.timer.start(self.tetris.speed, self)
+            self.statusBar().showMessage("")
+
     def timer_reset(self) -> None:
         self.timer.stop()
         self.timer.start(self.tetris.speed, self)
@@ -252,6 +262,9 @@ class ExampleWidget(QMainWindow):
         if self.tetris.is_game_over:
             return
 
+        if self.tetris.is_paused and event.key() != Qt.Key_P:
+            return
+
         if event.key() == Qt.Key_Right:
             self.tetris.move_right()
         elif event.key() == Qt.Key_Left:
@@ -274,10 +287,8 @@ class ExampleWidget(QMainWindow):
             if hold_success:
                 self.timer_reset()
         elif event.key() == Qt.Key_P:
-            # TODO: ポーズする
-            print("P")
+            self.pause_game()
         elif event.key() == Qt.Key_Escape:
-            # アプリ終了
             self.close()
         else:
             pass
