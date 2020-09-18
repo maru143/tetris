@@ -296,6 +296,94 @@ class DroppingMino:
             self.position = prev_position
             return False
 
+    def super_rotation_clockwise(self, field: Field) -> bool:
+        """
+        if last operation is spin_clockwise and mino is at invalid place
+        adjust its coord according to the SRS rule.
+        """
+
+        diff_coord: List[(int, int)]  # the list of (dy, dx)
+
+        if self.mino == TetroMino.O:
+
+            diff_coord = []
+
+        elif self.mino == TetroMino.I:
+
+            if self.direction == Direction.NORTH:
+                diff_coord = [(0, -2), (0, 1), (2, 1), (-1, -2)]
+            elif self.direction == Direction.EAST:
+                diff_coord = [(0, -2), (0, 1), (1, -2), (-2, 1)]
+            elif self.direction == Direction.SOUTH:
+                diff_coord = [(0, -1), (0, 2), (-2, -1), (1, 2)]
+            else:
+                diff_coord = [(0, 2), (0, -1), (-1, 2), (2, -1)]
+
+        else:
+
+            if self.direction == Direction.NORTH:
+                diff_coord = [(0, -2), (1, -2), (-2, 0), (-2, -1)]
+            elif self.direction == Direction.EAST:
+                diff_coord = [(0, -1), (-1, -1), (2, 0), (2, -1)]
+            elif self.direction == Direction.SOUTH:
+                diff_coord = [(0, 1), (1, 1), (-2, 0), (-2, 1)]
+            else:
+                diff_coord = [(0, 1), (-1, 1), (2, 0), (2, 1)]
+
+        y, x = self.position
+
+        for dy, dx in diff_coord:
+            self.position = (y + dy, x + dx)
+            if self.valid_place(field):
+                return True
+
+        self.position = (y, x)
+        return False
+
+    def super_rotation_anticlockwise(self, field: Field) -> bool:
+        """
+        if last operation is spin_anticlockwise and mino is at invalid place
+        adjust its coord according to the SRS rule.
+        """
+
+        diff_coord: List[(int, int)]  # the list of (dy, dx)
+
+        if self.mino == TetroMino.O:
+
+            diff_coord = []
+
+        elif self.mino == TetroMino.I:
+
+            if self.direction == Direction.NORTH:
+                diff_coord = [(0, 2), (0, -1), (-1, 2), (2, -1)]
+            elif self.direction == Direction.EAST:
+                diff_coord = [(0, 1), (0, -2), (2, 1), (-1, -2)]
+            elif self.direction == Direction.SOUTH:
+                diff_coord = [(0, 1), (0, -2), (1, -2), (-2, 1)]
+            else:
+                diff_coord = [(0, -1), (0, 2), (-2, -1), (1, 2)]
+
+        else:
+
+            if self.direction == Direction.NORTH:
+                diff_coord = [(0, 1), (1, 1), (-2, 0), (-2, 1)]
+            elif self.direction == Direction.EAST:
+                diff_coord = [(0, -1), (-1, -1), (2, 0), (2, -1)]
+            elif self.direction == Direction.SOUTH:
+                diff_coord = [(0, -1), (1, -1), (-2, 0), (-2, -1)]
+            else:
+                diff_coord = [(0, 1), (-1, 1), (2, 0), (2, 1)]
+
+        y, x = self.position
+
+        for dy, dx in diff_coord:
+            self.position = (y + dy, x + dx)
+            if self.valid_place(field):
+                return True
+
+        self.position = (y, x)
+        return False
+
     def spin_clockwise(self, field: Field) -> bool:
         """
         change the direction to next (clockwise)
@@ -306,8 +394,7 @@ class DroppingMino:
         if self.valid_place(field):
             return True
         else:
-            self.direction = self.direction.next_dir_anticlockwise()
-            return False
+            return self.super_rotation_clockwise(field)
 
     def spin_anticlockwise(self, field: Field) -> bool:
         """
@@ -319,8 +406,7 @@ class DroppingMino:
         if self.valid_place(field):
             return True
         else:
-            self.direction = self.direction.next_dir_clockwise()
-            return False
+            return self.super_rotation_anticlockwise(field)
 
 
 class TetroMinoGenerator:

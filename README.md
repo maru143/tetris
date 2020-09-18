@@ -6,6 +6,8 @@
 
 This is a tetris game just for learning Python.
 
+<img src="image/demo.gif" width="400px">
+
 ## Running
 
 #### Dependencies
