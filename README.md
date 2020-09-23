@@ -65,6 +65,5 @@ This tetris supports the following features:
 - [x] Next (you can see 5 next minos)
 - [x] Bag randomizer
 - [x] Super rotation system
-- [ ] T-spin 
-- [ ] display scores
-- [ ] restart button
+- [x] T-spin 
+- [x] display scores

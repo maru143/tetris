@@ -338,6 +338,7 @@ class DroppingMino:
                 return True
 
         self.position = (y, x)
+        self.direction = self.direction.next_dir_anticlockwise()
         return False
 
     def super_rotation_anticlockwise(self, field: Field) -> bool:
@@ -382,6 +383,7 @@ class DroppingMino:
                 return True
 
         self.position = (y, x)
+        self.direction = self.direction.next_dir_clockwise()
         return False
 
     def spin_clockwise(self, field: Field) -> bool:
