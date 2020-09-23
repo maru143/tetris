@@ -3,11 +3,24 @@
 
 import sys
 from collections import deque
-from typing import Deque, List
+from typing import Deque, List, Dict
 
 sys.path.append("src/")
 from mino import Field, DroppingMino, TetroMino, TetroMinoGenerator, \
     TetroMinoColor, Block
+
+
+class Score:
+    actions: Dict[int, int]
+    t_spins: Dict[int, int]
+    lines: int
+    total: int
+
+    def __init__(self):
+        self.actions = {i: 0 for i in range(1, 5)}
+        self.t_spins = {i: 0 for i in range(1, 4)}
+        self.lines = 0
+        self.total = 0
 
 
 class Tetris:
@@ -20,8 +33,10 @@ class Tetris:
     next_minos: Deque[TetroMino]
 
     speed: int  # mino falls every {speed} ms
+    score: Score
     is_paused: bool
     is_game_over: bool
+    last_op_is_spin: bool
 
     def __init__(self):
         self.field = Field()
@@ -34,8 +49,10 @@ class Tetris:
         self.next_minos = deque()
 
         self.speed = 1000
+        self.score = Score()
         self.is_paused = False
         self.is_game_over = False
+        self.last_op_is_spin = False
 
         for i in range(self.next_mino_num):
             self.next_minos.append(self.mino_generator.gen())
@@ -119,6 +136,7 @@ class Tetris:
         self.clear_lines()
         self.drop_next_mino()
         self.hold_just_now = False
+        self.last_op_is_spin = False
 
     def drop_next_mino(self):
         """take out mino from next and restock it"""
@@ -129,6 +147,26 @@ class Tetris:
             self.is_game_over = True
         self.next_minos.append(self.mino_generator.gen())
 
+    def is_t_spin(self) -> bool:
+        """judges whether the t_spin condition is satisfied"""
+
+        if not self.last_op_is_spin or \
+                not self.dropping_mino.mino == TetroMino.T:
+            return False
+
+        y, x = self.dropping_mino.position
+        size = self.dropping_mino.mino.size()
+        count = 0
+        for i in range(0, size, 2):
+            for j in range(0, size, 2):
+                if self.field.grid[y + i][x + j]:
+                    count += 1
+
+        if count >= 3:
+            return True
+        else:
+            return False
+
     def clear_lines(self) -> None:
         """deletes completely filled lines"""
 
@@ -136,8 +174,16 @@ class Tetris:
         remained_lines = [line for line in self.field.grid
                           if len([block for block in line if block.filled])
                           < self.field.width]
-
         delete_count = self.field.height - len(remained_lines)
+
+        if not delete_count:
+            return None
+
+        # calculate score
+        self.score.actions[delete_count] += 1
+        if self.is_t_spin():
+            self.score.t_spins[delete_count] += 1
+        self.score.lines += delete_count
 
         # push new lines
         new_lines = [[Block(False, TetroMinoColor.WHITE)
@@ -154,13 +200,16 @@ class Tetris:
         return False
 
     def move_right(self):
-        self.dropping_mino.move_mino(0, 1, self.field)
+        if self.dropping_mino.move_mino(0, 1, self.field):
+            self.last_op_is_spin = False
 
     def move_left(self):
-        self.dropping_mino.move_mino(0, -1, self.field)
+        if self.dropping_mino.move_mino(0, -1, self.field):
+            self.last_op_is_spin = False
 
     def move_down(self):
-        self.dropping_mino.move_mino(1, 0, self.field)
+        if self.dropping_mino.move_mino(1, 0, self.field):
+            self.last_op_is_spin = False
 
     def hard_drop(self):
         while self.dropping_mino.move_mino(1, 0, self.field):
@@ -168,10 +217,12 @@ class Tetris:
         self.dropped()
 
     def spin_clockwise(self):
-        self.dropping_mino.spin_clockwise(self.field)
+        if self.dropping_mino.spin_clockwise(self.field):
+            self.last_op_is_spin = True
 
     def spin_anticlockwise(self):
-        self.dropping_mino.spin_anticlockwise(self.field)
+        if self.dropping_mino.spin_anticlockwise(self.field):
+            self.last_op_is_spin = True
 
     def hold(self) -> bool:
         if self.hold_just_now:

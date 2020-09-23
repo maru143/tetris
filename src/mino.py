@@ -51,8 +51,8 @@ class TetroMino(Enum):
     T = 3
     L = 4
     J = 5
-    Z = 6
-    S = 7
+    S = 6
+    Z = 7
 
     def get_shape(self) -> np.ndarray:
 
@@ -88,16 +88,16 @@ class TetroMino(Enum):
                  [1, 1, 1],
                  [0, 0, 0]]
 
-        elif self == TetroMino.Z:
-            shape = \
-                [[1, 1, 0],
-                 [0, 1, 1],
-                 [0, 0, 0]]
-
         elif self == TetroMino.S:
             shape = \
                 [[0, 1, 1],
                  [1, 1, 0],
+                 [0, 0, 0]]
+
+        elif self == TetroMino.Z:
+            shape = \
+                [[1, 1, 0],
+                 [0, 1, 1],
                  [0, 0, 0]]
 
         else:
@@ -116,9 +116,9 @@ class TetroMino(Enum):
             return TetroMinoColor.ORANGE
         elif self == TetroMino.J:
             return TetroMinoColor.DARKBLUE
-        elif self == TetroMino.Z:
-            return TetroMinoColor.GREEN
         elif self == TetroMino.S:
+            return TetroMinoColor.GREEN
+        elif self == TetroMino.Z:
             return TetroMinoColor.RED
         else:
             return TetroMinoColor.WHITE

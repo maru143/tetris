@@ -3,8 +3,8 @@
 
 import sys
 from PyQt5.QtCore import Qt, QBasicTimer, QTimerEvent
-from PyQt5.QtGui import QPaintEvent, QKeyEvent, QPainter, QColor
-from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, QLabel
+from PyQt5.QtGui import QPaintEvent, QKeyEvent, QPainter, QColor, QFont
+from PyQt5.QtWidgets import QMainWindow, QLabel
 
 sys.path.append("src/")
 from tetris import Tetris
@@ -27,6 +27,20 @@ class GuiInfo:
         self.offset_y = y
 
 
+class ScoreLabels:
+    """
+    hold PyQt labels for displaying scores
+    """
+
+    single: QLabel
+    double: QLabel
+    triple: QLabel
+    tetris: QLabel
+    tss: QLabel
+    tsd: QLabel
+    tst: QLabel
+    lines: QLabel
+
 class Window(QMainWindow):
     timer: QBasicTimer
     tetris: Tetris
@@ -34,6 +48,7 @@ class Window(QMainWindow):
     field_info: GuiInfo
     hold_info: GuiInfo
     next_info: GuiInfo
+    labels: ScoreLabels
 
     def __init__(self):
 
@@ -57,11 +72,42 @@ class Window(QMainWindow):
 
     def init_tetris(self) -> None:
         self.tetris = Tetris()
+        self.labels = ScoreLabels()
 
         hold_label = QLabel("HOLD", self)
         hold_label.move(40, 60)
         next_label = QLabel("NEXT", self)
         next_label.move(330, 60)
+        score_label = QLabel("SCORES", self)
+        score_label.move(30, 150)
+
+        font = QFont()
+        font.setPointSize(10)
+
+        self.labels.single = QLabel(self)
+        self.labels.single.move(15, 175)
+        self.labels.single.setFont(font)
+        self.labels.double = QLabel(self)
+        self.labels.double.move(15, 190)
+        self.labels.double.setFont(font)
+        self.labels.triple = QLabel(self)
+        self.labels.triple.move(15, 205)
+        self.labels.triple.setFont(font)
+        self.labels.tetris = QLabel(self)
+        self.labels.tetris.move(15, 220)
+        self.labels.tetris.setFont(font)
+        self.labels.tss = QLabel(self)
+        self.labels.tss.move(15, 235)
+        self.labels.tss.setFont(font)
+        self.labels.tsd = QLabel(self)
+        self.labels.tsd.move(15, 250)
+        self.labels.tsd.setFont(font)
+        self.labels.tst = QLabel(self)
+        self.labels.tst.move(15, 265)
+        self.labels.tst.setFont(font)
+        self.labels.lines = QLabel(self)
+        self.labels.lines.move(15, 280)
+        self.labels.lines.setFont(font)
 
     def init_timer(self) -> None:
         self.timer = QBasicTimer()
@@ -102,6 +148,16 @@ class Window(QMainWindow):
         self.tetris.__init__()
         self.statusBar().showMessage("RESTARTED")
 
+    def paint_score(self) -> None:
+        self.labels.single.setText(f"SINGLE: {self.tetris.score.actions[1]}")
+        self.labels.double.setText(f"DOUBLE: {self.tetris.score.actions[2]}")
+        self.labels.triple.setText(f"TRIPLE: {self.tetris.score.actions[3]}")
+        self.labels.tetris.setText(f"TETRIS: {self.tetris.score.actions[4]}")
+        self.labels.tss.setText(f"TS-SINGLE: {self.tetris.score.t_spins[1]}")
+        self.labels.tsd.setText(f"TS-DOUBLE: {self.tetris.score.t_spins[2]}")
+        self.labels.tst.setText(f"TS-TRIPLE: {self.tetris.score.t_spins[3]}")
+        self.labels.lines.setText(f"LINES: {self.tetris.score.lines}")
+
     def timer_reset(self) -> None:
         self.timer.stop()
         self.timer.start(self.tetris.speed, self)
@@ -124,6 +180,7 @@ class Window(QMainWindow):
 
         painter = QPainter(self)
 
+        self.paint_score()
         self.paint_field(painter)
         self.paint_hold(painter)
         self.paint_next(painter)
